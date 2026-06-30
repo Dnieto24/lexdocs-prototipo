@@ -9,7 +9,12 @@ import { documentosPorFirmar, DocFirma } from '../../shared/mock-data';
   selector: 'app-firma',
   imports: [Icon],
   template: `
-    <h1 class="page-title">Bandeja de firmas</h1>
+    <div class="ph">
+      <div class="ph-left">
+        <h1 class="ph-title">Bandeja de Firmas</h1>
+        <p class="ph-sub">Gestiona la firma y visación de documentos del sistema.</p>
+      </div>
+    </div>
 
     <div class="segs">
       @for (s of segmentos(); track s.key) {
@@ -20,7 +25,10 @@ import { documentosPorFirmar, DocFirma } from '../../shared/mock-data';
     </div>
 
     <div class="card panel">
-      <p class="muted refresh">La vista se actualiza automáticamente cada 15 segundos…</p>
+      <div class="info-bar">
+        <app-icon name="refresh-cw" [size]="13" />
+        <span>La vista se actualiza automáticamente cada <strong>15 segundos</strong>.</span>
+      </div>
       <div class="filters">
         <div class="field"><label>Materia</label><input [value]="materia()" (input)="materia.set($any($event.target).value)" placeholder="Buscar por materia…" /></div>
         <div class="field"><label>Tipo de documento</label>
@@ -106,49 +114,84 @@ import { documentosPorFirmar, DocFirma } from '../../shared/mock-data';
     @if (visDoc(); as d) {
       <div class="md-overlay" (click)="visDoc.set(null)">
         <div class="md" (click)="$event.stopPropagation()">
-          <div class="md-head"><h3>Listado firmas y visaciones</h3><button class="md-x" (click)="visDoc.set(null)"><app-icon name="x" [size]="14" /></button></div>
-          <table class="data-table">
-            <thead><tr><th>Nombre</th><th>Estado</th><th>Tipo firma</th><th>Fecha firma</th></tr></thead>
-            <tbody>
-              <tr><td>Juan Pérez</td><td>{{ d.estado === 'Firmado' ? 'FIRMADO' : 'PENDIENTE' }}</td>
-                <td>{{ d.tipoFirma === '—' ? '-' : d.tipoFirma }}</td><td>{{ d.fechaFirma === '—' ? '-' : d.fechaFirma }}</td></tr>
-            </tbody>
-          </table>
-          <p class="muted novis">No se encontraron visadores para este documento.</p>
+          <div class="md-head">
+            <div class="md-head-inner">
+              <app-icon name="users" [size]="18" />
+              <div>
+                <h3>Listado firmas y visaciones</h3>
+                <p class="md-sub">Detalle de firmantes y visadores del documento seleccionado.</p>
+              </div>
+            </div>
+            <button class="md-x" (click)="visDoc.set(null)"><app-icon name="x" [size]="14" /></button>
+          </div>
+          <div class="md-body">
+            <table class="data-table">
+              <thead><tr><th>Nombre</th><th>Estado</th><th>Tipo firma</th><th>Fecha firma</th></tr></thead>
+              <tbody>
+                <tr><td>Juan Pérez</td><td>{{ d.estado === 'Firmado' ? 'FIRMADO' : 'PENDIENTE' }}</td>
+                  <td>{{ d.tipoFirma === '—' ? '-' : d.tipoFirma }}</td><td>{{ d.fechaFirma === '—' ? '-' : d.fechaFirma }}</td></tr>
+              </tbody>
+            </table>
+            <p class="muted novis">No se encontraron visadores para este documento.</p>
+          </div>
         </div>
       </div>
     }
   `,
   styles: [`
-    .segs { display: flex; gap: 14px; margin-bottom: 18px; }
-    .seg { flex: 1; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; padding: 14px 20px; font-weight: 700; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 10px; text-transform: uppercase; cursor: pointer; transition: border-color .15s var(--ease), color .15s var(--ease); }
-    .seg:hover:not(.active) { border-color: var(--brand-primary); color: var(--brand-primary); }
-    .seg.active { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
-    .seg .cnt { background: rgba(0,0,0,.12); border-radius: 999px; padding: 1px 9px; font-size: 12px; }
-    .seg.active .cnt { background: var(--brand-blue, #2563EB); color: #fff; }
-    .refresh { font-size: 12px; margin: 0 0 14px; }
+    /* ── Page header ── */
+    .ph { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .ph-left { display: flex; flex-direction: column; gap: 4px; }
+    .ph-title { margin: 0; font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.02em; }
+    .ph-sub { margin: 0; font-size: 13px; color: var(--text-muted); }
+
+    /* ── Segments (tab style) ── */
+    .segs { display: flex; gap: 0; background: var(--surface-2); border-radius: 10px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border); }
+    .seg { flex: 1; border: none; border-radius: 7px; padding: 10px 16px; font-weight: 600; font-size: 13px; color: var(--text-muted); background: none; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .seg:hover:not(.active) { color: var(--brand-primary); background: color-mix(in srgb, var(--brand-primary) 6%, transparent); }
+    .seg.active { background: var(--surface); color: var(--brand-primary); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .seg .cnt { background: color-mix(in srgb, var(--brand-primary) 15%, transparent); color: var(--brand-primary); border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
+    .seg:not(.active) .cnt { background: rgba(0,0,0,.08); color: var(--text-muted); }
+
+    /* ── Info bar ── */
+    .info-bar { display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--brand-primary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--brand-primary) 20%, transparent); border-radius: 7px; padding: 7px 12px; font-size: 12px; color: var(--brand-primary); margin-bottom: 14px; }
+    .info-bar strong { font-weight: 700; }
+
+    /* ── Filter card ── */
     .filters { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
     .filters .field { display: flex; flex-direction: column; gap: 5px; }
     .filters .field label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; }
-    .filters .field input, .filters .field select { border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-family: inherit; font-size: 13px; min-width: 200px; }
+    .filters .field input, .filters .field select { border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-family: inherit; font-size: 13px; min-width: 200px; background: var(--surface); color: var(--text); }
     .spacer { flex: 1; }
     .firmar-wrap { position: relative; display: flex; gap: 10px; }
-    .firma-pop { position: absolute; top: 110%; right: 0; z-index: 10; width: 340px; background: var(--surface); border: 2px solid #ef4444; border-radius: 12px; padding: 16px; box-shadow: var(--shadow-lg); }
-    .fp-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .fp-x { background: var(--brand-blue, #2563EB); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; }
-    .fp-opts { display: flex; gap: 14px; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+
+    /* ── Firma popover (clean, no red border) ── */
+    .firma-pop { position: absolute; top: 110%; right: 0; z-index: 10; width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.08); }
+    .fp-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 14px; }
+    .fp-x { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: grid; place-items: center; transition: background .12s; }
+    .fp-x:hover { background: var(--border); }
+    .fp-opts { display: flex; gap: 14px; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
     .fp-opts label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
-    .fp-warn { background: color-mix(in srgb, var(--brand-orange) 16%, var(--surface)); border-radius: 8px; padding: 10px 12px; font-size: 12px; margin: 0 0 12px; display: flex; gap: 8px; align-items: flex-start; }
+    .fp-warn { background: color-mix(in srgb, var(--brand-orange) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--brand-orange) 25%, transparent); border-radius: 8px; padding: 10px 12px; font-size: 12px; margin: 0 0 14px; display: flex; gap: 8px; align-items: flex-start; color: var(--text); }
+
+    /* ── Table utilities ── */
     .namebtn { background: none; border: none; cursor: pointer; color: var(--brand-primary); display: inline-flex; align-items: center; gap: 6px; padding: 0; font-family: inherit; font-size: 13px; }
     .namebtn app-icon { color: #dc2626; }
-    .exp-link { color: var(--brand-primary); font-weight: 600; }
+    .exp-link { color: var(--brand-primary); font-weight: 600; cursor: pointer; }
     .vis-btn { background: none; border: none; cursor: pointer; color: var(--brand-primary); display: inline-flex; align-items: center; gap: 5px; }
     .btn-rojo { color: #dc2626; border-color: #dc2626; }
-    .md-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 1100; display: grid; place-items: center; }
-    .md { background: var(--surface); border-radius: 12px; padding: 22px 26px; width: min(620px, 94vw); box-shadow: var(--shadow-lg); }
-    .md-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .md-head h3 { margin: 0; }
-    .md-x { background: var(--brand-blue, #2563EB); color: #fff; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; }
+
+    /* ── Modal ── */
+    .md-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1100; display: grid; place-items: center; backdrop-filter: blur(2px); }
+    .md { background: var(--surface); border-radius: 14px; width: min(640px, 94vw); box-shadow: 0 24px 64px rgba(0,0,0,.2), 0 4px 16px rgba(0,0,0,.1); overflow: hidden; }
+    .md-head { background: linear-gradient(135deg, var(--brand-primary) 0%, color-mix(in srgb, var(--brand-primary) 70%, #1e40af) 100%); padding: 20px 24px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .md-head-inner { display: flex; align-items: flex-start; gap: 12px; color: #fff; }
+    .md-head-inner app-icon { margin-top: 2px; opacity: .9; }
+    .md-head h3 { margin: 0 0 3px; font-size: 16px; font-weight: 700; color: #fff; }
+    .md-sub { margin: 0; font-size: 12px; color: rgba(255,255,255,.75); }
+    .md-x { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; transition: background .12s; }
+    .md-x:hover { background: rgba(255,255,255,.35); }
+    .md-body { padding: 22px 26px 24px; }
     .novis { text-align: center; margin: 16px 0 0; }
   `],
 })

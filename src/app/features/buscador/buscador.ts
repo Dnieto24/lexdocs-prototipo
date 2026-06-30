@@ -5,13 +5,27 @@ import { expedientes, organismos, procedimientos } from '../../shared/mock-data'
 @Component({
   selector: 'app-buscador',
   template: `
-    <h1 class="page-title">Buscador de expedientes</h1>
+    <div class="ph">
+      <div class="ph-left">
+        <h1 class="ph-title">Buscador de Expedientes</h1>
+        <p class="ph-sub">Filtra y encuentra expedientes por organismo, procedimiento o estado.</p>
+      </div>
+    </div>
 
     <div class="layout">
       <aside class="card panel filtros">
-        <input class="buscar" [value]="texto()" (input)="texto.set($any($event.target).value)" placeholder="Buscar" />
+        <div class="filtros-header">
+          <span class="filtros-title">Filtros</span>
+          <button class="btn btn-ghost btn-sm" (click)="limpiar()">↻ Borrar filtros</button>
+        </div>
+        <div class="filtros-divider"></div>
 
-        <div class="sel-head"><span class="muted">Has seleccionado</span><button class="btn btn-ghost btn-sm" (click)="limpiar()">↻ Borrar filtros</button></div>
+        <div class="buscar-wrap">
+          <span class="buscar-icon">🔍</span>
+          <input class="buscar" [value]="texto()" (input)="texto.set($any($event.target).value)" placeholder="Buscar expediente..." />
+        </div>
+
+        <div class="sel-head"><span class="muted">Has seleccionado</span></div>
         <div class="chips">
           @if (org() !== 'Todos') { <span class="chip" (click)="org.set('Todos')">{{ org() }} ✕</span> }
           @if (proc() !== 'Todos') { <span class="chip" (click)="proc.set('Todos')">{{ proc() }} ✕</span> }
@@ -33,14 +47,30 @@ import { expedientes, organismos, procedimientos } from '../../shared/mock-data'
       </aside>
 
       <div class="resultados">
-        <div class="rcount muted">Se han encontrado <b>{{ resultados().length }}</b> resultados</div>
+        <div class="results-header-row">
+          <span class="results-label">Resultados</span>
+          <span class="results-count-badge">{{ resultados().length }}</span>
+          <span class="results-found-text">expedientes encontrados</span>
+        </div>
+
         @for (e of resultados(); track e.folio) {
           <div class="rcard" (click)="abrir(e.folio)">
-            <div class="rtop"><b>{{ e.folio }}</b></div>
-            <div class="rrow">
-              <span><span class="muted">Procedimiento:</span> {{ e.procedimiento }}</span>
-              <span><span class="muted">Fecha ingreso:</span> {{ e.fechaIngreso }}</span>
-              <span><span class="muted">Estado:</span> <span class="badge" [class]="badge(e.estado)">{{ e.estado }}</span></span>
+            <div class="rcard-top">
+              <span class="folio-pill">{{ e.folio }}</span>
+              <span class="badge" [class]="badge(e.estado)">{{ e.estado }}</span>
+            </div>
+            <div class="rcard-body">
+              <div class="rcard-field">
+                <span class="rcard-label">Procedimiento</span>
+                <span class="rcard-value rcard-proc">{{ e.procedimiento }}</span>
+              </div>
+              <div class="rcard-field">
+                <span class="rcard-label">Fecha ingreso</span>
+                <span class="rcard-value">{{ e.fechaIngreso }}</span>
+              </div>
+            </div>
+            <div class="rcard-footer">
+              <a class="rcard-open" (click)="$event.stopPropagation(); abrir(e.folio)">Abrir expediente →</a>
             </div>
           </div>
         }
@@ -49,23 +79,73 @@ import { expedientes, organismos, procedimientos } from '../../shared/mock-data'
     </div>
   `,
   styles: [`
-    .layout { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: start; }
+    /* ── Page header ── */
+    .ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    .ph-left { display: flex; flex-direction: column; gap: 4px; }
+    .ph-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0; }
+    .ph-sub { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+    /* ── Layout ── */
+    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 18px; align-items: start; }
+
+    /* ── Aside / Filtros ── */
     .filtros { display: flex; flex-direction: column; gap: 14px; }
-    .buscar { border: 1px solid var(--border); border-radius: var(--radius-input); padding: 10px 16px; font-family: inherit; transition: border-color .15s var(--ease), box-shadow .15s var(--ease); }
+    .filtros-header { display: flex; justify-content: space-between; align-items: center; }
+    .filtros-title { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: .01em; }
+    .filtros-divider { height: 1px; background: var(--border); margin: 0 -4px; }
+
+    /* ── Search input with icon ── */
+    .buscar-wrap { position: relative; display: flex; align-items: center; }
+    .buscar-icon { position: absolute; left: 10px; font-size: 14px; pointer-events: none; line-height: 1; }
+    .buscar { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px 10px 36px; font-family: inherit; font-size: 13px; transition: border-color .15s var(--ease), box-shadow .15s var(--ease); }
     .buscar:focus { outline: none; border-color: var(--brand-primary); box-shadow: var(--ring); }
+
     .sel-head { display: flex; justify-content: space-between; align-items: center; }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 8px; }
     .chip { background: var(--brand-primary); color: #fff; border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
     .grp { display: flex; flex-direction: column; gap: 5px; }
     .grp label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; }
     .grp input, .grp select { border: 1px solid var(--border); border-radius: var(--radius-input); padding: 9px 14px; font-family: inherit; font-size: 13px; transition: border-color .15s var(--ease), box-shadow .15s var(--ease); }
     .grp input:focus, .grp select:focus { outline: none; border-color: var(--brand-primary); box-shadow: var(--ring); }
+
+    /* ── Results area ── */
     .resultados { display: flex; flex-direction: column; gap: 12px; }
-    .rcount { text-align: right; }
-    .rcard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; cursor: pointer; box-shadow: var(--shadow); transition: box-shadow .2s var(--ease), transform .2s var(--ease), border-color .2s var(--ease); }
+
+    .results-header-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .results-label { font-size: 14px; font-weight: 700; color: var(--text); }
+    .results-count-badge { background: var(--brand-primary); color: #fff; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+    .results-found-text { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Result cards ── */
+    .rcard {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--brand-primary);
+      border-radius: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: box-shadow .2s var(--ease), transform .2s var(--ease), border-color .2s var(--ease);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
     .rcard:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--brand-primary); }
-    .rtop { font-size: 15px; margin-bottom: 10px; }
-    .rrow { display: flex; gap: 40px; flex-wrap: wrap; font-size: 13px; align-items: center; }
+
+    .rcard-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .folio-pill { background: var(--brand-primary); color: #fff; border-radius: 999px; padding: 3px 14px; font-size: 12px; font-weight: 700; letter-spacing: .03em; }
+
+    .rcard-body { display: flex; gap: 32px; flex-wrap: wrap; }
+    .rcard-field { display: flex; flex-direction: column; gap: 2px; }
+    .rcard-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; }
+    .rcard-value { font-size: 13px; color: var(--text); }
+    .rcard-proc { font-weight: 600; font-size: 14px; }
+
+    .rcard-footer { display: flex; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px; }
+    .rcard-open { font-size: 13px; font-weight: 600; color: var(--brand-primary); cursor: pointer; text-decoration: none; }
+    .rcard-open:hover { text-decoration: underline; }
+
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
   `],
 })

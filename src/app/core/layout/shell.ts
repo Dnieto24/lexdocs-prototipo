@@ -68,19 +68,19 @@ import { DocHistorialComponent } from '../../shared/doc-historial';
 
     /* Sidebar */
     .sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
-    .brand { display: flex; align-items: center; gap: 10px; padding: 20px 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 20px 20px 16px; margin-bottom: 6px; background: linear-gradient(180deg, transparent 70%, color-mix(in srgb, var(--brand-primary) 6%, transparent) 100%); border-bottom: 1px solid transparent; border-image: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent) 1; }
     .mark { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-blue) 55%, var(--brand-green) 100%); box-shadow: 0 2px 8px rgba(8,0,152,.25); flex-shrink: 0; }
     .wm { font-family: 'Exo'; font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
     .wm b { color: var(--text); }
     .wm span { color: var(--brand-green); }
 
     nav { flex: 1; overflow-y: auto; padding: 4px 10px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: var(--text-muted); font-weight: 500; margin-bottom: 1px; width: 100%; border: none; background: none; font-size: 13px; text-align: left; transition: background .15s var(--ease), color .15s var(--ease); }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: var(--text-muted); font-weight: 500; margin-bottom: 1px; width: 100%; border: none; background: none; font-size: 13px; text-align: left; transition: background .15s var(--ease), color .15s var(--ease), box-shadow .15s var(--ease); }
     .nav-item .lbl { flex: 1; }
     .nav-item .ic { width: 18px; display: flex; align-items: center; justify-content: center; }
     .nav-item:hover { background: var(--surface-2); color: var(--text); }
-    .nav-item.active { background: color-mix(in srgb, var(--brand-primary) 8%, transparent); color: var(--brand-primary); font-weight: 700; }
-    .nav-item.parent.active { background: color-mix(in srgb, var(--brand-primary) 6%, transparent); color: var(--brand-primary); }
+    .nav-item.active { background: color-mix(in srgb, var(--brand-primary) 8%, transparent); color: var(--brand-primary); font-weight: 700; box-shadow: inset 3px 0 0 var(--brand-primary); border-radius: 0 8px 8px 0; }
+    .nav-item.parent.active { background: color-mix(in srgb, var(--brand-primary) 8%, transparent); color: var(--brand-primary); box-shadow: inset 3px 0 0 var(--brand-primary); border-radius: 0 8px 8px 0; }
     .chev { transition: transform .2s; color: var(--text-muted); font-size: 12px; }
     .chev.open { transform: rotate(90deg); }
 
@@ -92,8 +92,8 @@ import { DocHistorialComponent } from '../../shared/doc-historial';
     .ver { padding: 12px 16px; font-size: 10.5px; color: var(--text-muted); border-top: 1px solid var(--border); }
 
     /* Topbar */
-    .topbar { height: var(--topbar-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 5; }
-    .title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
+    .topbar { height: var(--topbar-h); background: var(--surface); border-bottom: none; box-shadow: 0 1px 0 var(--border), 0 2px 8px rgba(16,24,40,.04); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 5; }
+    .title { font-family: 'Exo', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
     .tb-right { display: flex; align-items: center; gap: 10px; }
 
     .theme-tgl { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-muted); border-radius: 8px; transition: all .15s var(--ease); }
@@ -108,7 +108,7 @@ import { DocHistorialComponent } from '../../shared/doc-historial';
     .logout { font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); transition: all .15s var(--ease); }
     .logout:hover { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; text-decoration: none; }
 
-    .content { padding: 24px 32px; }
+    .content { padding: 28px 32px; }
     .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   `],
 })
