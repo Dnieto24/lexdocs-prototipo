@@ -16,8 +16,13 @@ import {
   template: `
     @if (vista() === 'nuevo') {
       <!-- ===== Generar pre ingreso ===== -->
-      <div class="breadcrumb"><a (click)="vista.set('lista')">Pre Ingreso</a> / Nuevo</div>
-      <h1 class="page-title">Pre Ingreso</h1>
+      <div class="ph">
+        <div class="ph-left">
+          <div class="ph-breadcrumb"><a class="ph-back" (click)="vista.set('lista')">← Pre Ingreso</a></div>
+          <h1 class="ph-title">Nuevo pre ingreso</h1>
+          <p class="ph-sub">Registra un documento antes de su ingreso formal al sistema.</p>
+        </div>
+      </div>
 
       <div class="nuevo">
       <div class="card panel">
@@ -93,8 +98,15 @@ import {
       </div>
     } @else {
       <!-- ===== Lista ===== -->
-      <div class="breadcrumb"><a routerLink="/app/inicio">Inicio</a> / Pre Ingreso</div>
-      <h1 class="page-title">Pre Ingreso</h1>
+      <div class="ph">
+        <div class="ph-left">
+          <h1 class="ph-title">Pre Ingreso</h1>
+          <p class="ph-sub">Documentos en estado previo al ingreso formal a la Oficina de Partes.</p>
+        </div>
+        <div class="ph-actions">
+          <button class="btn" (click)="vista.set('nuevo')"><app-icon name="plus" [size]="16" /> Generar pre ingreso</button>
+        </div>
+      </div>
 
       <div class="op-layout">
         <aside class="card panel filtros-side">
@@ -182,7 +194,9 @@ import {
     }
   `,
   styles: [`
-    .breadcrumb a { cursor: pointer; }
+    .ph-breadcrumb { margin-bottom: 4px; }
+    .ph-back { font-size: 13px; color: var(--brand-primary); text-decoration: none; cursor: pointer; font-weight: 600; }
+    .ph-back:hover { text-decoration: underline; }
     .op-layout { display: flex; gap: 20px; align-items: flex-start; }
     .filtros-side { width: 380px; flex-shrink: 0; }
     .filtros-side .f-title { margin: 0 0 4px; font-size: 17px; }

@@ -565,6 +565,8 @@ export interface NavItem { key: string; label: string; icon: string; ruta?: stri
 
 // Menú plano (forma MINVU, skin LexDocs). Sin encabezados de sección.
 export const navItems: NavItem[] = [
+  { key: 'inicio', label: 'Inicio', icon: 'home', ruta: 'inicio' },
+  { key: 'expedientes', label: 'Expedientes', icon: 'folder', ruta: 'expedientes' },
   // ponytail: Reportes oculto por ahora (hidden:true). Reactivar quitando hidden. Ver memoria "menus-ocultos".
   { key: 'reportes', label: 'Reportes', icon: 'clipboard-list', ruta: 'reportes', hidden: true },
   { key: 'dashboard', label: 'Dashboard', icon: 'bar-chart', ruta: 'dashboard', hidden: true },
@@ -606,11 +608,11 @@ export const navItems: NavItem[] = [
 export const ROLES = ['Administrador General', 'Oficial de Partes', 'Ciudadano'];
 
 export const roleRoutes: Record<string, string[]> = {
-  'Administrador General': ['inicio', 'reportes', 'dashboard', 'ingresos', 'buscadores', 'bandeja', 'firma', 'oficina-partes', 'mantenedores', 'auditoria'],
-  'Oficial de Partes': ['inicio', 'reportes', 'ingresos', 'buscadores', 'bandeja', 'firma', 'oficina-partes'],
-  'Administrador de Procesos': ['inicio', 'ingresos', 'mantenedores'],
-  'Auditor': ['inicio', 'reportes', 'dashboard', 'auditoria', 'buscadores'],
-  'Usuario General': ['inicio', 'ingresos', 'buscadores', 'bandeja', 'firma'],
+  'Administrador General': ['inicio', 'expedientes', 'reportes', 'dashboard', 'ingresos', 'buscadores', 'bandeja', 'firma', 'oficina-partes', 'mantenedores', 'auditoria'],
+  'Oficial de Partes': ['inicio', 'expedientes', 'reportes', 'ingresos', 'buscadores', 'bandeja', 'firma', 'oficina-partes'],
+  'Administrador de Procesos': ['inicio', 'expedientes', 'ingresos', 'mantenedores'],
+  'Auditor': ['inicio', 'expedientes', 'reportes', 'dashboard', 'auditoria', 'buscadores'],
+  'Usuario General': ['inicio', 'expedientes', 'ingresos', 'buscadores', 'bandeja', 'firma'],
   'Ciudadano': ['inicio', 'ingresos', 'buscadores', 'bandeja', 'firma'],
 };
 
