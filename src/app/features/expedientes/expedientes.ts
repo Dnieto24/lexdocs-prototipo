@@ -10,8 +10,7 @@ import { expedientes, expedienteColumns, organismos, procedimientos } from '../.
   template: `
     <div class="ph">
       <div class="ph-left">
-        <div class="breadcrumb"><a routerLink="/app/reportes">Reportes</a> <span>›</span> Listado</div>
-        <h1 class="ph-title">Expedientes</h1>
+<h1 class="ph-title">Expedientes</h1>
         <p class="ph-sub">Revisa el estado, etapas y documentos asociados a cada trámite.</p>
       </div>
       <div class="ph-actions">
